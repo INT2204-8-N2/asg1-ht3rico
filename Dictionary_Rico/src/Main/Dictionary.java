@@ -11,5 +11,6 @@ import java.util.HashMap;
  */
 
 public class Dictionary {
-    HashMap<String,String> words = new HashMap<String,String>(); 
+    HashMap<String,String> words = new HashMap<>(); 
+    int id;
 }

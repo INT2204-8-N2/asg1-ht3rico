@@ -11,6 +11,5 @@ package Main;
  */
 public class Word {
     String spelling;
-    String explain;
-    
+    String explain;   
 }

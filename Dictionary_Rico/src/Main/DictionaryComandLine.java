@@ -6,17 +6,17 @@
 package Main;
 
 /**
- *
+ * 
  * @author HT3rico
  */
 public class DictionaryComandLine {
-//    public void dictionaryBasic(){
-//        DictionaryManegement DicMan = new DictionaryManegement();
-//
-//    }
+    public void Run(){
+        DictionaryManegement DM = new DictionaryManegement();
+        DM.insertFromCommandline();
+        DM.showAllWorlds();
+    }
     public static void main(String [] args){
-//        DictionaryComandLine dcl = new DictionaryComandLine();
-//        dcl.dictionaryBasic();
-          System.out.println("Tester");
+        DictionaryComandLine Test = new DictionaryComandLine();
+        Test.Run();
     }
 }
