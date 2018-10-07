@@ -5,18 +5,33 @@
  */
 package Main;
 
+import API.SynthesiserV2;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import javazoom.jl.decoder.JavaLayerException;
+
 /**
  *
  * @author HT3rico
  */
 public class Screen extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Screen
-     */
+    DictionaryManegement connect = new DictionaryManegement();
+    Word word= new Word() ;
+    DefaultListModel dm = new DefaultListModel();
+    SynthesiserV2 synthesizer = new SynthesiserV2();
+    int id=139242;
     public Screen() {
-        initComponents();
+       initComponents();
+       loadDuLieu();
+       
     }
+    private Object test1;
+    private Object test2;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,100 +42,214 @@ public class Screen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bAdd = new javax.swing.JButton();
+        bEdit = new javax.swing.JButton();
+        bDelete = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        tfEnter = new javax.swing.JTextField();
+        jScrollPan = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        test1 = new javax.swing.JTextField();
-        javax.swing.JTextField test2 = new javax.swing.JTextField();
-        test3 = new javax.swing.JTextField();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        rb1 = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
+        backgr = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dictionary_Rico");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusCycleRoot(false);
+        setPreferredSize(new java.awt.Dimension(900, 600));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setText("Add");
-
-        jLabel3.setText("Delete");
-
-        jLabel4.setText("Edit");
-
-        test1.setToolTipText("");
-        test1.addActionListener(new java.awt.event.ActionListener() {
+        bAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Main/img/add.png"))); // NOI18N
+        bAdd.setToolTipText("Thêm từ");
+        bAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                test1ActionPerformed(evt);
+                bAddActionPerformed(evt);
             }
         });
+        getContentPane().add(bAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 80, 30, -1));
 
-        test2.setToolTipText("");
-        test2.addActionListener(new java.awt.event.ActionListener() {
+        bEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Main/img/edit.png"))); // NOI18N
+        bEdit.setToolTipText("Sửa từ");
+        bEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                test2ActionPerformed(evt);
+                bEditActionPerformed(evt);
             }
         });
+        getContentPane().add(bEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 70, 30, -1));
 
-        test3.setToolTipText("");
-        test3.addActionListener(new java.awt.event.ActionListener() {
+        bDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Main/img/delete.png"))); // NOI18N
+        bDelete.setToolTipText("Xóa từ");
+        bDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                test3ActionPerformed(evt);
+                bDeleteActionPerformed(evt);
             }
         });
+        getContentPane().add(bDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 50, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(368, 368, 368)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addGap(82, 82, 82)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(test2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(test1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(test3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(608, Short.MAX_VALUE))
-        );
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Main/img/volum.png"))); // NOI18N
+        jButton1.setToolTipText("Nghe");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 80, 30, -1));
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {test1, test2, test3});
+        jButton2.setText("Xóa");
+        jButton2.setToolTipText("");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 70, -1));
 
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(test2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(test1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(test3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(607, Short.MAX_VALUE))
-        );
+        tfEnter.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        tfEnter.setText("Nhập từ");
+        tfEnter.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                tfEnterCaretUpdate(evt);
+            }
+        });
+        getContentPane().add(tfEnter, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 176, -1));
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {test1, test2, test3});
+        jList1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jScrollPan.setViewportView(jList1);
+
+        getContentPane().add(jScrollPan, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 180, 230));
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 110, 670, 480));
+
+        jRadioButton2.setText("Tìm tương đối");
+        getContentPane().add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, -1, -1));
+
+        rb1.setText("Search");
+        getContentPane().add(rb1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, -1, -1));
+
+        jLabel1.setText("Chuyển");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 70, -1, -1));
+
+        backgr.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Main/img/Back.jpg"))); // NOI18N
+        getContentPane().add(backgr, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+  
+    private void bAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAddActionPerformed
+      // TODO add your handling code here:
+        add add = new add();
+        add.setVisible(true);
+    }//GEN-LAST:event_bAddActionPerformed
 
-    private void test1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_test1ActionPerformed
+    private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
+
+        edit edit = new edit();
+        edit.setID(word.id);
+        edit.setVisible(true);
+    }//GEN-LAST:event_bEditActionPerformed
+private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {                                    
         // TODO add your handling code here:
-    }//GEN-LAST:event_test1ActionPerformed
-
-    private void test2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_test2ActionPerformed
+    if(!jList1.isSelectionEmpty())
+        {    
+        ResultSet rs= connect.getword(jList1.getSelectedValue());
+       try {
+           while(rs.next()){
+               word.id =rs.getInt("idx");
+               word.spelling=rs.getString("word");
+               word.explain= rs.getString("detail");
+                 
+           }
+           rs.close();
+       } catch (SQLException ex) {
+           JOptionPane.showMessageDialog(null,ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+       }
+       jLabel2.setText("<HTML>"+word.explain+"</HTML>");
+    }                                   
+    else{
+        jLabel2.setText("");
+    }
+    }
+    private void tfEnterCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tfEnterCaretUpdate
         // TODO add your handling code here:
-    }//GEN-LAST:event_test2ActionPerformed
+        dm.clear();
+        jList1.setModel(dm);
+        String  sql;
+        ResultSet result;
+        word=new Word();
+        if(tfEnter.getText().isEmpty()){
+            backgr.setText("");
+        }
+        else{
+        try {
+            if(rb1.isSelected())
+                sql = "select * from tbl_edict where word like '"  + tfEnter.getText() + "'" ;
+            else
+                sql="select * from tbl_edict where word like '" + tfEnter.getText() + "%"+"'";
+            result = connect.excuteQuery(sql);
 
-    private void test3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_test3ActionPerformed
+            try {
+                while (result.next()) {
+                    dm.addElement(result.getString("word"));
+                }
+            } catch (SQLException ex) {
+                loadDuLieu();
+            }
+            result.close();
+        } catch (Exception ex) {
+            
+            JOptionPane.showMessageDialog(null, "Có lỗi trong việc lấy dữ liệu, thành thật xin lỗi! ","Lỗi",JOptionPane.ERROR_MESSAGE);
+        }
+        jList1.setModel(dm);
+        }
+    }//GEN-LAST:event_tfEnterCaretUpdate
+
+    private void bDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_test3ActionPerformed
+        if(!word.spelling.isEmpty())
+        {connect.delete(word.spelling);
+        JOptionPane.showMessageDialog(null, "Xóa từ thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else
+        JOptionPane.showMessageDialog(null, "Bạn chưa chọn từ để xóa","Lỗi",JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_bDeleteActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+         try {
+                synthesizer.speak(word.spelling);
+                
+           } catch (JavaLayerException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);}
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        tfEnter.setText("");
+        jLabel1.setText("");
+    }//GEN-LAST:event_jButton2ActionPerformed
+    public void loadDuLieu() {
+        ResultSet result = null;
+        dm.clear();
+       try {
+            result = connect.excuteQuery("SELECT word FROM tbl_edict");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Lỗi1:" + ex.toString());
+        }
+        try {
+            while (result.next()) {
+                dm.addElement(result.getString("word"));
+            }
+        } catch (SQLException ex) {
+            loadDuLieu();
+        }
+        jList1.setModel(dm);
+    }
     /**
      * @param args the command line arguments
      */
@@ -149,18 +278,24 @@ public class Screen extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Screen().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Screen().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bAdd;
+    private javax.swing.JButton bDelete;
+    private javax.swing.JButton bEdit;
+    private javax.swing.JLabel backgr;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField test1;
-    private javax.swing.JTextField test3;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JScrollPane jScrollPan;
+    private javax.swing.JRadioButton rb1;
+    private javax.swing.JTextField tfEnter;
     // End of variables declaration//GEN-END:variables
 }

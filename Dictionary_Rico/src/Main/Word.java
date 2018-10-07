@@ -10,6 +10,13 @@ package Main;
  * @author HT3rico
  */
 public class Word {
-    String spelling;
-    String explain;   
+    String spelling,explain;
+    int id;
+    public Word(int id,String a,String b){
+        spelling =a;
+        explain= b;
+    }
+    public Word(){
+        
+    }
 }
