@@ -1,4 +1,4 @@
-package API;
+package api;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -163,7 +163,7 @@ public class SynthesiserV2 extends BaseSynthsiser {
                     player.play();
                     
                 } catch (IOException  e) {
-                    JOptionPane.showMessageDialog(null, "Lỗi, không thể phát âm, thành thật xin lỗi!","Lỗi",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Mạng đâu Giáo sư ","Lỗi",JOptionPane.ERROR_MESSAGE);
                 }
 		
 	}
