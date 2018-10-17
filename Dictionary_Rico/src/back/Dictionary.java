@@ -5,15 +5,14 @@
  */
 package back;
 
-import java.util.HashMap;
-
 /**
  *
- * @author HT3rico
+ * @author Lai Thi Thu Phuong
  */
 import java.util.HashMap;
+import java.util.Map;
 
 public class Dictionary {
-    HashMap<String,String> words =new HashMap<>();
+    Map<String,String> words =new HashMap<String,String>();
 }
 

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+    </Property>
+    <Property name="location" type="java.awt.Point" editor="org.netbeans.beaninfo.editors.PointEditor">
+      <Point value="[500, 200]"/>
+    </Property>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[550, 650]"/>
+    </Property>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[550, 650]"/>
+    </Property>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,118,0,0,2,27"/>
+  </AuxValues>
+
+  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+    <Property name="useNullLayout" type="boolean" value="false"/>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="0" y="0" width="540" height="630"/>
+        </Constraint>
+      </Constraints>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" pref="517" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+              <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="312" max="32767" attributes="0"/>
+                      <Component id="jLabel2" min="-2" pref="217" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" pref="608" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+              <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="179" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" pref="193" max="-2" attributes="0"/>
+                      <EmptySpace pref="260" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;head&gt; &#x9;&lt;title&gt;About&lt;/title&gt; &#x9;&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;javaswing.css&quot;&gt; &lt;/head&gt; &lt;body&gt; &#x9;&lt;header&gt; &#x9;&lt;center&gt;        &lt;h1&gt;  B&#xe0;i t&#x1ead;p l&#x1edb;n m&#xf4;n L&#x1ead;p Tr&#xec;nh H&#x1b0;&#x1edb;ng &#x110;&#x1ed1;i T&#x1b0;&#x1ee3;ng&lt;/h1&gt;                &lt;h2&gt;DictionaryRico&lt;/h2&gt; &#x9;&lt;/center&gt;&#x9;&#x9;       &lt;/header&gt; &#x9; &#x9;&lt;nav&gt; &#x9;&#x9;  &lt;h3&gt;Ch&#x1ee9;c n&#x103;ng: &lt;/h3&gt; &#x9;&#x9;  &lt;ul&gt; &#x9;&#x9;&#x9;&lt;li&gt;1. Tra c&#x1ee9;u t&#x1eeb; &lt;/li&gt; &#x9;&#x9;&#x9;&lt;li&gt;2. Th&#xea;m,s&#x1eed;a,x&#xf3;a t&#x1eeb;  &lt;/li&gt; &#x9;&#x9;&#x9;&lt;li&gt;3. Ph&#xe1;t &#xe2;m c&#xe1;c t&#x1eeb;&lt;/li&gt; &#x9;&#x9;&#x9;&lt;li&gt;4. D&#x1ecb;ch v&#x103;n b&#x1ea3;n&lt;/li&gt; &#x9;&#x9;  &lt;/ul&gt; &#x9;&lt;/nav&gt; &#x9;&lt;article&gt; &#x9;&#x9;&lt;h3&gt;Team: HT3rico&lt;/h3&gt;  &#x9;&#x9;&lt;li&gt;&lt;b&gt;&#x110;inh &#x110;&#x1ea1;i D&#x1b0;&#x1a1;ng&lt;/b&gt; &#x9;&#x9;&#x9;&lt;ul&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;MSSV: 17020654&lt;/li&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;Contact: 0969775340&lt;/li&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;Gamil: Daiduong2602@gmail.com&lt;/li&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;Facebook: &lt;a href=&quot;https://www.facebook.com/DuongRico&quot;&gt;https://www.facebook.com/DuongRico&lt;/a&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;Github:  &lt;a href=&quot;https://github.com/HT3rico&quot;&gt;https://github.com/HT3rico&lt;/a&gt; &#x9;&#x9;&#x9;&lt;/ul&gt; &#x9;&#x9;&lt;/li&gt; &#x9;&#x9; &#x9;&#x9;&lt;li&gt;&lt;b&gt;C&#xe1;c th&#x1b0; vi&#x1ec7;n v&#xe0; ngu&#x1ed3;n t&#xe0;i li&#x1ec7;u&lt;/b&gt; &#x9;&#x9;&#x9;&lt;ul&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;1. sqlite-jdbc-3.23.1 : K&#x1ebf;t n&#x1ed1;i, s&#x1eed; d&#x1ee5;ng SQLite&lt;/li&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;2. jl1.0 : Ch&#x1ea1;y mp3 &lt;/li&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;3. freetts-1.2.1 : Ph&#xe1;t &#xe2;m t&#x1eeb; khi Offline &lt;/li&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;4. SysnthesiserV2 : API google speech t&#x1eeb; t&#xe1;c gi&#x1ea3; : Skylion (Aaron Gokaslan) &lt;/li&gt; &#x9;&#x9;&#x9;&#x9;&lt;li&gt;5. GoogleTranslate : API googletranslate t&#x1eeb; t&#xe1;c gi&#x1ea3; : Skylion (Aaron Gokaslan) &lt;/li&gt; &#x9;&#x9;&#x9;&lt;/ul&gt; &#x9;&#x9;&lt;/li&gt; &#x9;&#x9;&lt;h3&gt;Language: Java&lt;/h3&gt; &#x9;&lt;/article&gt;  &lt;/body&gt; &lt;/html&gt;"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/img/icon.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

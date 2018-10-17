@@ -1,5 +1,7 @@
 package api;
 
+
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -19,12 +21,14 @@ import javazoom.jl.player.advanced.AdvancedPlayer;
  */
 public class SynthesiserV2 extends BaseSynthsiser {
 
-	private static final String GOOGLE_SYNTHESISER_URL = "https://www.google.com/speech-api/v2/synthesize?enc=mpeg" +
-			"&client=chromium";
+	private static final String GOOGLE_SYNTHESISER_URL = "https://www.google.com/speech-api/v2/synthesize?enc=mpeg" +"&client=chromium";
 	/**
 	 * API_KEY used for requests
 	 */
-	private final String API_KEY="AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw";
+
+        //AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw
+        //AIzaSyAMd6hAeyHGvFmu6oFyN6BkUPZPQ0rY8EM
+	private final String API_KEY="AIzaSyAMd6hAeyHGvFmu6oFyN6BkUPZPQ0rY8EM"; 
 
 	/**
 	 * language of the Text you want to translate
@@ -101,8 +105,7 @@ public class SynthesiserV2 extends BaseSynthsiser {
 	 */
 	public void setSpeed(double speed) {
 		this.speed = speed;
-	}
-	
+	}	
 	@Override
 	public InputStream getMP3Data(String synthText) throws IOException{
 
@@ -159,11 +162,15 @@ public class SynthesiserV2 extends BaseSynthsiser {
 		try {
                     
                     //Create a JLayer instance
+                    // cai nay ne =..= , cai kia la t them freetts vao de luc OFFline dung :v /
                     AdvancedPlayer player = new AdvancedPlayer(this.getMP3Data(text));
                     player.play();
                     
                 } catch (IOException  e) {
-                    JOptionPane.showMessageDialog(null, "Mạng đâu Giáo sư ","Lỗi",JOptionPane.ERROR_MESSAGE);
+                    speakOff sO= new speakOff();
+                    sO.speech(text);  
+                    //System.out.println(e.toString());
+//                   JOptionPane.showMessageDialog(null,  "Error ","Lỗi",JOptionPane.ERROR_MESSAGE);
                 }
 		
 	}

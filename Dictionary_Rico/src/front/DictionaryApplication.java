@@ -6,38 +6,69 @@
 package front;
 
 import api.SynthesiserV2;
-import back.DataBase;
-import back.word;
+import back.Database;
+import back.Word;
+import api.speakOff;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.management.remote.JMXConnectorFactory.connect;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javazoom.jl.decoder.JavaLayerException;
 
 /**
  *
  * @author HT3rico
  */
 public class DictionaryApplication extends javax.swing.JFrame {
-
+    Database data = new Database();
+    Word word= new Word() ;
+    DefaultListModel<String> dListModel = new DefaultListModel<>();
+    DefaultListModel<String> dListOld = new DefaultListModel<>();
+    HashSet <String> old = new HashSet<>();
+    
     /**
      * Creates new form DictionaryApplication
      */
-   DataBase connect = new DataBase();
-   word word= new word() ;
-   DefaultListModel dm = new DefaultListModel();
-   SynthesiserV2 synthesizer = new SynthesiserV2();
-   int id=139242;
     public DictionaryApplication() {
         initComponents();
         seticon();
-        showAll();
-       
     }
+    
+    /**
+     * icon 
+     */
     private void seticon() {
      setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/icon.png")));
+    }
+    /**
+     * Show list từ
+     */
+    public void showAll() {
+        dListModel.clear();
+        try ( ResultSet rs = data.exeQ("SELECT word FROM tbl_edict");){
+            while (rs.next()) {
+                dListModel.addElement(rs.getString("word"));
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error !!! ","Lỗi Dic 4",JOptionPane.ERROR_MESSAGE);
+        }
+        listWord.setModel(dListModel);
+    }
+    /**
+     * Show lịch sử
+     */
+    public void showOld() {
+        dListOld.clear();
+        for (String s : old) {dListOld.addElement(s);}
+        listOld.setModel(dListOld);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -50,95 +81,82 @@ public class DictionaryApplication extends javax.swing.JFrame {
 
         Tabble = new javax.swing.JTabbedPane();
         traTu = new javax.swing.JPanel();
-        tfIN = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listWord = new javax.swing.JList<>();
         bClear = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         labelOut = new javax.swing.JLabel();
-        phatAm = new javax.swing.JButton();
+        loa = new javax.swing.JButton();
         bDel = new javax.swing.JButton();
         bEdit = new javax.swing.JButton();
         bAdd = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        nangCao = new javax.swing.JPanel();
+        textFind = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listOld = new javax.swing.JList<>();
+        Tracuu = new javax.swing.JLabel();
+        lichsuTracuu = new javax.swing.JLabel();
+        bTrans = new javax.swing.JButton();
         tuVung = new javax.swing.JPanel();
-        BG = new javax.swing.JPanel();
+        BG = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        Show = new javax.swing.JMenuItem();
+        jMenuExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        about = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(300, 150));
         setMinimumSize(new java.awt.Dimension(1050, 700));
 
+        Tabble.setBackground(new java.awt.Color(153, 0, 153));
         Tabble.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
-        traTu.setBackground(new java.awt.Color(204, 204, 204));
+        traTu.setBackground(new java.awt.Color(0, 153, 153));
         traTu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         traTu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tfIN.setFont(new java.awt.Font("Tahoma", 2, 13)); // NOI18N
-        tfIN.setText("Nhập từ cần tìm");
-        tfIN.setToolTipText("");
-        tfIN.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                tfINCaretUpdate(evt);
-            }
-        });
-        tfIN.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tfINMouseClicked(evt);
-            }
-        });
-        tfIN.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                tfINKeyPressed(evt);
-            }
-        });
-        traTu.add(tfIN, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 80, 170, 30));
-
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jList1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        listWord.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        listWord.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        listWord.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList1ValueChanged(evt);
+                listWordValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(listWord);
 
-        traTu.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 110, 260, 370));
+        traTu.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 330, 180));
 
-        bClear.setText("Clear");
+        bClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconReload.jpg"))); // NOI18N
+        bClear.setToolTipText("");
         bClear.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         bClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bClearActionPerformed(evt);
             }
         });
-        traTu.add(bClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 40, 30));
+        traTu.add(bClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 50, 40, 40));
 
         jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
 
         labelOut.setBackground(new java.awt.Color(255, 255, 255));
         labelOut.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         labelOut.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        labelOut.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        labelOut.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jScrollPane2.setViewportView(labelOut);
 
-        traTu.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 110, 560, 370));
+        traTu.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 90, 580, 480));
 
-        phatAm.setText("Phát âm");
-        phatAm.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        phatAm.addActionListener(new java.awt.event.ActionListener() {
+        loa.setText("Phát âm");
+        loa.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        loa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                phatAmActionPerformed(evt);
+                loaActionPerformed(evt);
             }
         });
-        traTu.add(phatAm, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 110, 80, 40));
+        traTu.add(loa, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 50, 40));
 
         bDel.setText("Xóa");
         bDel.setToolTipText("");
@@ -148,7 +166,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
                 bDelActionPerformed(evt);
             }
         });
-        traTu.add(bDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 340, 80, 40));
+        traTu.add(bDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 280, 60, 40));
 
         bEdit.setText("Sửa từ");
         bEdit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -157,7 +175,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
                 bEditActionPerformed(evt);
             }
         });
-        traTu.add(bEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 290, 80, 40));
+        traTu.add(bEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 280, 60, 40));
 
         bAdd.setText("Thêm từ");
         bAdd.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -166,31 +184,54 @@ public class DictionaryApplication extends javax.swing.JFrame {
                 bAddActionPerformed(evt);
             }
         });
-        traTu.add(bAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 240, 80, 40));
+        traTu.add(bAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 60, 40));
 
-        jButton1.setText("Tìm");
-        jButton1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        textFind.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
+        textFind.setText("Nhập từ cần tìm");
+        textFind.setToolTipText(""); // NOI18N
+        textFind.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                textFindCaretUpdate(evt);
             }
         });
-        traTu.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, 40, 30));
+        textFind.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textFindMouseClicked(evt);
+            }
+        });
+        textFind.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                textFindKeyPressed(evt);
+            }
+        });
+        traTu.add(textFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 290, 40));
+
+        listOld.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        listOld.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listOldValueChanged(evt);
+            }
+        });
+        jScrollPane3.setViewportView(listOld);
+
+        traTu.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 400, 330, 170));
+
+        Tracuu.setBackground(new java.awt.Color(255, 255, 255));
+        Tracuu.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        Tracuu.setForeground(new java.awt.Color(255, 255, 204));
+        Tracuu.setText("Tra cứu");
+        traTu.add(Tracuu, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
+
+        lichsuTracuu.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        lichsuTracuu.setForeground(new java.awt.Color(255, 255, 204));
+        lichsuTracuu.setText("Lịch sử tra cứu");
+        traTu.add(lichsuTracuu, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 250, 30));
+
+        bTrans.setText("Trans");
+        bTrans.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        traTu.add(bTrans, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 140, 50, 40));
 
         Tabble.addTab("Tra Từ", traTu);
-
-        javax.swing.GroupLayout nangCaoLayout = new javax.swing.GroupLayout(nangCao);
-        nangCao.setLayout(nangCaoLayout);
-        nangCaoLayout.setHorizontalGroup(
-            nangCaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1077, Short.MAX_VALUE)
-        );
-        nangCaoLayout.setVerticalGroup(
-            nangCaoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 582, Short.MAX_VALUE)
-        );
-
-        Tabble.addTab("Nâng Cao", nangCao);
 
         tuVung.setFocusTraversalPolicyProvider(true);
 
@@ -198,44 +239,52 @@ public class DictionaryApplication extends javax.swing.JFrame {
         tuVung.setLayout(tuVungLayout);
         tuVungLayout.setHorizontalGroup(
             tuVungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1077, Short.MAX_VALUE)
+            .addGap(0, 1080, Short.MAX_VALUE)
         );
         tuVungLayout.setVerticalGroup(
             tuVungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 582, Short.MAX_VALUE)
+            .addGap(0, 620, Short.MAX_VALUE)
         );
 
-        Tabble.addTab("Học Từ Vựng", tuVung);
+        Tabble.addTab("Coming soon", tuVung);
 
-        BG.setBackground(new java.awt.Color(0, 204, 255));
-
-        javax.swing.GroupLayout BGLayout = new javax.swing.GroupLayout(BG);
-        BG.setLayout(BGLayout);
-        BGLayout.setHorizontalGroup(
-            BGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        BGLayout.setVerticalGroup(
-            BGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 118, Short.MAX_VALUE)
-        );
+        BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Ba.jpg"))); // NOI18N
+        BG.setToolTipText("");
 
         jMenu1.setText("File");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+
+        Show.setText("Hiện tất cả các tử");
+        Show.setActionCommand("");
+        Show.setBorderPainted(true);
+        Show.setDoubleBuffered(true);
+        Show.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
+                ShowActionPerformed(evt);
             }
         });
+        jMenu1.add(Show);
 
-        jMenuItem1.setText("??");
-        jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setText("Exit");
-        jMenu1.add(jMenuItem2);
+        jMenuExit.setText("Exit");
+        jMenuExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuExitActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuExit);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Help");
+
+        about.setText("Author");
+        about.setToolTipText("");
+        about.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutActionPerformed(evt);
+            }
+        });
+        jMenu2.add(about);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -244,171 +293,207 @@ public class DictionaryApplication extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Tabble)
-            .addComponent(BG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BG)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Tabble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(BG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(BG, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Tabble, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(Tabble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         Tabble.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void bClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearActionPerformed
+    
+   /**
+     * Tắt chương trình
+     * @param evt 
+     */
+    private void jMenuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuExitActionPerformed
         // TODO add your handling code here:
-        tfIN.setText("");
-        labelOut.setText("");
-    }//GEN-LAST:event_bClearActionPerformed
-
-    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        // TODO add your handling code here:
-        if(!jList1.isSelectionEmpty())
-        {    
-        ResultSet rs= connect.getword(jList1.getSelectedValue());
-       try {
-       
-               word.setId(rs.getInt("idx"));
-               word.setSpelling(rs.getString("word"));
-               word.setExplain(rs.getString("detail"));
-        } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null,ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-       labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");
-    }                                   
-    else{
-        labelOut.setText("");
-    }
-    }//GEN-LAST:event_jList1ValueChanged
-
-    private void tfINMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfINMouseClicked
-        // TODO add your handling code here:
-        tfIN.setText("");
-    }//GEN-LAST:event_tfINMouseClicked
-
-    private void tfINCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_tfINCaretUpdate
-        // TODO add your handling code here:
-        dm.clear();
-        jList1.setModel(dm);
-        String  sql;
-        ResultSet result;
-        word=new word();
-        if(tfIN.getText().isEmpty()){
-            labelOut.setText("");
-        }
-        else{
-        try {
-            
-            sql="select * from tbl_edict where word like '" + tfIN.getText() + "%"+"'";
-            result = connect.excuteQuery(sql);
-
-            try {
-                while (result.next()) {
-                    dm.addElement(result.getString("word"));
-                }
-            } catch (SQLException ex) {
-                showAll();
-            }
-            result.close();
-        } catch (Exception ex) {
-            
-            JOptionPane.showMessageDialog(null, "Error cmnr !!! ","Lỗi",JOptionPane.ERROR_MESSAGE);
-        }
-        jList1.setModel(dm);
-        }
-    }//GEN-LAST:event_tfINCaretUpdate
-
+        System.exit(0);
+    }//GEN-LAST:event_jMenuExitActionPerformed
+    /**
+     * Thêm từ
+     * @param evt 
+     */
     private void bAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAddActionPerformed
         // TODO add your handling code here:
         Them add = new Them();
-        add.setVisible(true);
+        //add.setVisible(true);
     }//GEN-LAST:event_bAddActionPerformed
-
-    private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
+    /**
+     * ô tìm kiếm
+     * @param evt 
+     */
+    private void textFindCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_textFindCaretUpdate
         // TODO add your handling code here:
-        Sua edit = new Sua();
-        edit.setID(word.getId());
-        edit.setVisible(true);
-    }//GEN-LAST:event_bEditActionPerformed
-
+        dListModel.clear();
+        String  sql="select * from tbl_edict where word like \"" + textFind.getText() + "%"+"\"";
+//       ResultSet result=null;
+//        word=new Word();
+        if(textFind.getText().isEmpty()){
+            labelOut.setText("");
+        }
+        else{
+            try (ResultSet result = data.exeQ(sql)) {
+                while (result.next()) {
+                    dListModel.addElement(result.getString("word"));
+                }
+                result.close();
+            } 
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Lỗi trong TextFind ","Lỗi",JOptionPane.ERROR_MESSAGE);
+            }
+        listWord.setModel(dListModel);
+        }
+    }//GEN-LAST:event_textFindCaretUpdate
+    /**
+     * Lựa chọn mới trong ListWord
+     * @param evt 
+     */
+    private void listWordValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listWordValueChanged
+        if(!listWord.isSelectionEmpty()) {    
+            word= data.getword(listWord.getSelectedValue());
+            if(!word.getSpelling().isEmpty())
+            labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");
+        }
+//        if(!listWord.isSelectionEmpty()) {
+//            word= data.getword(listWord.getSelectedValue());
+//            his.put(listWord.getSelectedValue(),1);
+//            if(!word.getSpelling().isEmpty())
+//            labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");
+//        }                                   
+    }//GEN-LAST:event_listWordValueChanged
+    /**
+    * Xóa
+    * @param evt 
+    */
     private void bDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDelActionPerformed
         // TODO add your handling code here:
-        if(!word.spelling.isEmpty())
-        {connect.delete(word.spelling);
-        tfIN.setText("");
-        showAll();
-        JOptionPane.showMessageDialog(null, "Đã xóa từ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        if (listWord.isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(null, "Bạn chưa chọn từ để xóa","Lỗi",JOptionPane.ERROR_MESSAGE);
+        } else
+        if(!word.getSpelling().isEmpty()) {
+            if (old.contains(word.getSpelling())) { 
+                old.remove(word.getSpelling()); showOld(); 
+            }
+            data.delete(word.getSpelling());
+            JOptionPane.showMessageDialog(null, "Đã xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            textFind.setText("");
+            labelOut.setText("");
+            //showAll();    
         }
         else
-        JOptionPane.showMessageDialog(null, "Lỗi","Lỗi",JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Bạn chưa chọn từ để xóa","Lỗi",JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_bDelActionPerformed
-
-    private void phatAmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phatAmActionPerformed
+    /**
+    * API speech
+    * @param evt 
+    */
+    private void loaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_phatAmActionPerformed
-
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-        // TODO add your handling code here:
-        System.exit(0);
-    }//GEN-LAST:event_jMenu1ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        if (tfIN.getText()==null) {
-             labelOut.setText("");
-        } else {
-            ResultSet rs= connect.getword(jList1.getSelectedValue());
-            try {
-               word.setId(rs.getInt("idx"));
-               word.setSpelling(rs.getString("word"));
-               word.setExplain(rs.getString("detail"));
-            } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null,ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (word.getSpelling().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Bạn chưa chọn từ ","Lỗi",JOptionPane.ERROR_MESSAGE);    
         }
-        labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");    
-        }                               
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void tfINKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfINKeyPressed
+        else {
+            SynthesiserV2 speakOn = new SynthesiserV2();
+            try {
+                 speakOn.speak(word.getSpelling());     
+            } 
+            catch (JavaLayerException ex) {     
+                System.out.println(ex.toString());
+                Logger.getLogger(DictionaryApplication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        
+    }//GEN-LAST:event_loaActionPerformed
+    /**
+    * Sửa
+    * @param evt 
+    */
+    private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
+        // TODO add your handling code here:
+        Sua s = new Sua();
+        if (!word.getSpelling().isEmpty())
+            s.setSua(word);
+        s.setVisible(true);
+    }//GEN-LAST:event_bEditActionPerformed
+    /**
+     * Click chuột vào ô tìm kiếm
+     * @param evt 
+     */
+    private void textFindMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textFindMouseClicked
+        // TODO add your handling code here:
+        textFind.setText("");
+        labelOut.setText("");
+    }//GEN-LAST:event_textFindMouseClicked
+    /**
+     * Refresh
+     * @param evt 
+     */
+    private void bClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClearActionPerformed
+        // TODO add your handling code here:
+        textFind.setText("");
+        labelOut.setText("");
+    }//GEN-LAST:event_bClearActionPerformed
+    /**
+     * Nhận phím Enter trong Ô tìm kiếm
+     * @param evt 
+     */
+    private void textFindKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFindKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (tfIN.getText()==null) {
-             labelOut.setText("");
-        } else {
-            ResultSet rs= connect.getword(jList1.getSelectedValue());
-            try {
-               word.setId(rs.getInt("idx"));
-               word.setSpelling(rs.getString("word"));
-               word.setExplain(rs.getString("detail"));
-            } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null,ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");    
-        } 
-        }
-    }//GEN-LAST:event_tfINKeyPressed
-      public void showAll() {
-        ResultSet result = null;
-        dm.clear();
-       try {
-            result = connect.excuteQuery("SELECT word FROM tbl_edict");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Lỗi1:" + ex.toString());
-        }
-        try {
-            while (result.next()) {
-                dm.addElement(result.getString("word"));
+            
+            if (!textFind.getText().isEmpty()) { 
+                word = data.getword(textFind.getText());
+                if (word.getExplain()!=null){
+                    labelOut.setText("<HTML>"+word.getExplain()+"</HTML>"); 
+                } 
+                else labelOut.setText("Không có từ cần tìm kiếm");
             }
-        } catch (SQLException ex) {
-            showAll();
+            else {
+                labelOut.setText("");
+            } 
+            if(word.getSpelling()!=null) {
+                old.add(word.getSpelling());
+                showOld();
+            } 
         }
-        jList1.setModel(dm);
-    }
+    }//GEN-LAST:event_textFindKeyPressed
+    /**
+     * List từ cũ
+     * @param evt 
+     */
+    private void listOldValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listOldValueChanged
+        // TODO add your handling code here:     
+   
+            word = data.getword(listOld.getSelectedValue());
+            labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");  
+    }//GEN-LAST:event_listOldValueChanged
+    /**
+     * About 
+     * @param evt 
+     */
+    private void aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutActionPerformed
+        // TODO add your handling code here:
+        About ab = new About();
+        ab.setVisible(true);
+    }//GEN-LAST:event_aboutActionPerformed
+
+    private void ShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowActionPerformed
+        // TODO add your handling code here:
+        showAll();
+    }//GEN-LAST:event_ShowActionPerformed
+        
     /**
      * @param args the command line arguments
      */
@@ -435,6 +520,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(DictionaryApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -445,25 +531,29 @@ public class DictionaryApplication extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel BG;
+    private javax.swing.JLabel BG;
+    private javax.swing.JMenuItem Show;
     private javax.swing.JTabbedPane Tabble;
+    private javax.swing.JLabel Tracuu;
+    private javax.swing.JMenuItem about;
     private javax.swing.JButton bAdd;
     private javax.swing.JButton bClear;
     private javax.swing.JButton bDel;
     private javax.swing.JButton bEdit;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JButton bTrans;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuExit;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelOut;
-    private javax.swing.JPanel nangCao;
-    private javax.swing.JButton phatAm;
-    private javax.swing.JTextField tfIN;
+    private javax.swing.JLabel lichsuTracuu;
+    private javax.swing.JList<String> listOld;
+    private javax.swing.JList<String> listWord;
+    private javax.swing.JButton loa;
+    private javax.swing.JTextField textFind;
     private javax.swing.JPanel traTu;
     private javax.swing.JPanel tuVung;
     // End of variables declaration//GEN-END:variables

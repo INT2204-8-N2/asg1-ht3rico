@@ -7,12 +7,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-public class DataBase {
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+public class Database {
     Connection conn = null;
-    int id=139244;
-    private Connection connect() {
-      try {
+    int id;
+    public Connection connect() {
+      try {     
                 Class.forName("org.sqlite.JDBC");
                 String url = "jdbc:sqlite:dictionaries.db";
                 conn = DriverManager.getConnection(url);
@@ -21,88 +22,136 @@ public class DataBase {
             }
         return conn;
     }
-     public void insert(String eng, String viet) {
-        String sql = "INSERT INTO tbl_edict(idx,word,detail) VALUES(?,?,?)";
- 
+    /**
+     * Gán thuộc tính id = idx Max
+     */
+    public  void  IdMax(){
+        String sql="SELECT MAX(idx) FROM tbl_edict";
+        int idmax=0;
+        ResultSet rs=null;
+        try (Connection conn = this.connect()){    
+             rs  = this.exeQ(sql);
+             idmax=rs.getInt("MAX(idx)");
+             conn.close();
+             rs.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }   
+        this.id=idmax+1;
+    }
+     /**
+      * Thêm từ
+      * @param eng
+      * @param viet 
+      */
+    public void insert(String eng, String viet){
+        this.IdMax();
+        String sql = "INSERT INTO tbl_edict(idx,word,detail) VALUES("+(id++) +",'"+eng+"','"+viet+"')";
+       
         try (Connection conn = this.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1,id++);
-            pstmt.setString(2, eng);
-            pstmt.setString(3, viet);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+           
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-     public void update(int id, String word, String detail) {
+     /**
+      * Sửa từ
+      * @param id
+      * @param word
+      * @param detail 
+      */
+    public void update(int id, String word, String detail) {
         String sql = "UPDATE tbl_edict SET word = ? , "
                 + "detail = ? "
                 + "WHERE idx = ?";
  
         try (Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
- 
-            // set the corresponding param
             pstmt.setString(1, word);
             pstmt.setString(2, detail);
             pstmt.setInt(3, id);
-            // update 
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-       public void delete(String word) {
+    /**
+     * Xóa từ
+     * @param word 
+     */
+    public void delete(String word) {
         String sql = "DELETE FROM tbl_edict WHERE word = ?";
  
         try (Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
- 
-            // set the corresponding param
             pstmt.setString(1, word);
-            // execute the delete statement
             pstmt.executeUpdate();
  
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-    public ResultSet getword(String word) {
-        String sql = "SELECT * "+ "FROM tbl_edict WHERE word = '"+ word + "'";
+    /**
+     * Trả vè Word với tham số spelling
+     * @param word
+     * @return 
+     */
+    public Word getword(String s) {
+        String sql = "SELECT * "+ "FROM tbl_edict WHERE word = \""+s+"\"";
         ResultSet rs=null;
+        Word w=new Word();
         try (Connection conn = this.connect()){
-             rs  = this.excuteQuery(sql);    
+             rs  = this.exeQ(sql);
+             while(rs.next()){
+                 w.setId(rs.getInt("idx"));
+                 w.setSpelling(rs.getString("word"));
+                 w.setExplain(rs.getString("detail"));
+             }     
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return rs;
-    }   
-    
-      protected Statement getStatement() throws Exception {  
-      Statement statement = null;
-        if (statement == null ? true : statement.isClosed()) {
-            statement = this.connect().createStatement();
+        return w;   
+    }  
+    /**
+     * Trả về Word với tham số id
+     * @param i
+     * @return 
+     */
+    public Word getData(int i){
+       String sql = "SELECT * "+ "FROM tbl_edict WHERE idx = '"+ i+ "'";
+        ResultSet rs=null;
+        Word w=new Word();
+        try (Connection conn = this.connect()){
+             rs  = this.exeQ(sql);
+                 w.setSpelling(rs.getString("word"));
+                 w.setExplain(rs.getString("detail"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        return statement;
+        return w;
     }
-     public ResultSet excuteQuery(String query) throws Exception {
+
+      /**
+       * Trả về kết quả truy vấn
+       * @param query
+       * @return
+       * @throws Exception 
+       */
+     public ResultSet exeQ(String s) throws Exception {
          ResultSet result;
         try {
-            result = this.getStatement().executeQuery(query);
+            //thực thi câu lệnh
+            result = connect().createStatement().executeQuery(s);
         } catch (Exception e) {
             throw new Exception("Lỗi:" + e.getMessage());
         }
         return result; 
     }
-
-    public int excuteUpdate(String query) throws Exception {
-        int res = Integer.MIN_VALUE;
-        try {
-            res = this.getStatement().executeUpdate(query);
-        } catch (Exception e) {
-            throw new Exception("Lỗi:" + e.getMessage());
-        } 
-        return res;
-    }
-    
 }

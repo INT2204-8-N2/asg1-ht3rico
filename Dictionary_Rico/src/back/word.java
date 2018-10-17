@@ -9,18 +9,27 @@ package back;
  *
  * @author HT3rico
  */
-public class word {
-    public String spelling;
-    public String explain;
+public class Word {
+    private String spelling;
+    private String explain;
     private int id;
-    public word(int i,String s,String e){
-        spelling =s;
-        explain= e;
-        id = i;
+    
+    public Word(int i,String s,String e){
+        this.spelling = s;
+        this.explain = e;
+        this.id = i;
     }
-    public word(){
+    public Word(){
+        this.spelling = "";
+        this.explain = "";
+        this.id = 0;
     }
     
+    public void setWord(int i,String s,String e) {
+        this.spelling =s;
+        this.explain= e;
+        this.id = i;
+    }
     public void setSpelling(String s) {
         this.spelling = s;
     }
