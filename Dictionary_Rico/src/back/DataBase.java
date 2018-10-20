@@ -23,15 +23,15 @@ public class Database {
         return conn;
     }
     /**
-     * Gán thuộc tính id = idx Max
+     * Gán thuộc tính id = id Max
      */
     public  void  IdMax(){
-        String sql="SELECT MAX(idx) FROM tbl_edict";
+        String sql="SELECT MAX(id) FROM Dictionary";
         int idmax=0;
         ResultSet rs=null;
         try (Connection conn = this.connect()){    
              rs  = this.exeQ(sql);
-             idmax=rs.getInt("MAX(idx)");
+             idmax=rs.getInt("MAX(id)");
              conn.close();
              rs.close();
         } catch (Exception e) {
@@ -46,7 +46,7 @@ public class Database {
       */
     public void insert(String eng, String viet){
         this.IdMax();
-        String sql = "INSERT INTO tbl_edict(idx,word,detail) VALUES("+(id++) +",'"+eng+"','"+viet+"')";
+        String sql = "INSERT INTO Dictionary(id,word,info) VALUES("+(id++) +",'"+eng+"','"+viet+"')";
        
         try (Connection conn = this.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -65,17 +65,17 @@ public class Database {
       * Sửa từ
       * @param id
       * @param word
-      * @param detail 
+      * @param info 
       */
-    public void update(int id, String word, String detail) {
-        String sql = "UPDATE tbl_edict SET word = ? , "
-                + "detail = ? "
-                + "WHERE idx = ?";
+    public void update(int id, String word, String info) {
+        String sql = "UPDATE Dictionary SET word = ? , "
+                + "info = ? "
+                + "WHERE id = ?";
  
         try (Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, word);
-            pstmt.setString(2, detail);
+            pstmt.setString(2, info);
             pstmt.setInt(3, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -87,7 +87,7 @@ public class Database {
      * @param word 
      */
     public void delete(String word) {
-        String sql = "DELETE FROM tbl_edict WHERE word = ?";
+        String sql = "DELETE FROM Dictionary WHERE word = ?";
  
         try (Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -104,15 +104,15 @@ public class Database {
      * @return 
      */
     public Word getword(String s) {
-        String sql = "SELECT * "+ "FROM tbl_edict WHERE word = \""+s+"\"";
+        String sql = "SELECT * "+ "FROM Dictionary WHERE word = \""+s+"\"";
         ResultSet rs=null;
         Word w=new Word();
         try (Connection conn = this.connect()){
              rs  = this.exeQ(sql);
              while(rs.next()){
-                 w.setId(rs.getInt("idx"));
+                 w.setId(rs.getInt("id"));
                  w.setSpelling(rs.getString("word"));
-                 w.setExplain(rs.getString("detail"));
+                 w.setExplain(rs.getString("info"));
              }     
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -125,13 +125,13 @@ public class Database {
      * @return 
      */
     public Word getData(int i){
-       String sql = "SELECT * "+ "FROM tbl_edict WHERE idx = '"+ i+ "'";
+       String sql = "SELECT * "+ "FROM Dictionary WHERE id = '"+ i+ "'";
         ResultSet rs=null;
         Word w=new Word();
         try (Connection conn = this.connect()){
              rs  = this.exeQ(sql);
                  w.setSpelling(rs.getString("word"));
-                 w.setExplain(rs.getString("detail"));
+                 w.setExplain(rs.getString("info"));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

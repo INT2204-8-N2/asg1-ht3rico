@@ -36,6 +36,7 @@ public class About extends javax.swing.JFrame {
         setLocation(new java.awt.Point(500, 200));
         setMinimumSize(new java.awt.Dimension(550, 650));
         setPreferredSize(new java.awt.Dimension(550, 650));
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));

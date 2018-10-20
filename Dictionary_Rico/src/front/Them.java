@@ -46,6 +46,7 @@ public class Them extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(500, 300));
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         getContentPane().add(spelling, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 44, 360, 30));
 

@@ -52,7 +52,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
      */
     public void showAll() {
         dListModel.clear();
-        try ( ResultSet rs = data.exeQ("SELECT word FROM tbl_edict");){
+        try ( ResultSet rs = data.exeQ("SELECT word FROM Dictionary");){
             while (rs.next()) {
                 dListModel.addElement(rs.getString("word"));
             }
@@ -106,8 +106,11 @@ public class DictionaryApplication extends javax.swing.JFrame {
         about = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Dictionary_Rico");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocation(new java.awt.Point(300, 150));
         setMinimumSize(new java.awt.Dimension(1050, 700));
+        setResizable(false);
 
         Tabble.setBackground(new java.awt.Color(153, 0, 153));
         Tabble.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -156,7 +159,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
                 loaActionPerformed(evt);
             }
         });
-        traTu.add(loa, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 50, 40));
+        traTu.add(loa, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 60, 40));
 
         bDel.setText("Xóa");
         bDel.setToolTipText("");
@@ -246,7 +249,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
             .addGap(0, 620, Short.MAX_VALUE)
         );
 
-        Tabble.addTab("Coming soon", tuVung);
+        Tabble.addTab("Updating", tuVung);
 
         BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Ba.jpg"))); // NOI18N
         BG.setToolTipText("");
@@ -338,7 +341,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
     private void textFindCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_textFindCaretUpdate
         // TODO add your handling code here:
         dListModel.clear();
-        String  sql="select * from tbl_edict where word like \"" + textFind.getText() + "%"+"\"";
+        String  sql="select * from Dictionary where word like \"" + textFind.getText() + "%"+"\"";
 //       ResultSet result=null;
 //        word=new Word();
         if(textFind.getText().isEmpty()){
