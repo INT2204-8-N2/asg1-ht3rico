@@ -31,7 +31,6 @@ public class About extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setLocation(new java.awt.Point(500, 200));
         setMinimumSize(new java.awt.Dimension(550, 650));

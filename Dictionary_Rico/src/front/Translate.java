@@ -55,7 +55,6 @@ public class Translate extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Google Traslate");
         setBackground(new java.awt.Color(255, 255, 255));
         setLocation(new java.awt.Point(500, 300));
@@ -73,10 +72,10 @@ public class Translate extends javax.swing.JFrame {
                 dichActionPerformed(evt);
             }
         });
-        jPanel1.add(dich, new org.netbeans.lib.awtextra.AbsoluteConstraints(378, 198, 74, 42));
+        jPanel1.add(dich, new org.netbeans.lib.awtextra.AbsoluteConstraints(374, 200, 90, 42));
 
         textFind.setColumns(20);
-        textFind.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        textFind.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         textFind.setRows(5);
         textFind.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         textFind.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -89,28 +88,33 @@ public class Translate extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 331, 264));
 
         textRs.setColumns(20);
-        textRs.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        textRs.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         textRs.setRows(5);
         textRs.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jScrollPane2.setViewportView(textRs);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 80, 339, 264));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 80, 339, 264));
 
         Change.setBackground(new java.awt.Color(255, 255, 255));
-        Change.setText("Đổi kèo");
+        Change.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/change_ico.jpg"))); // NOI18N
         Change.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChangeActionPerformed(evt);
             }
         });
-        jPanel1.add(Change, new org.netbeans.lib.awtextra.AbsoluteConstraints(375, 127, -1, 34));
+        jPanel1.add(Change, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 130, 40, 34));
 
         comboIn.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
-        comboIn.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiếng Việt", "Tiếng Anh" }));
+        comboIn.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiếng Việt", "Tiếng Anh", "Pháp", "Đức", " " }));
+        comboIn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboInActionPerformed(evt);
+            }
+        });
         jPanel1.add(comboIn, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, 40));
 
         comboOut.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
-        comboOut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiếng Việt", "Tiếng Anh" }));
+        comboOut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiếng Việt", "Tiếng Anh", "Pháp", "Đức", " " }));
         jPanel1.add(comboOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 30, -1, 40));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/speaker.jpg"))); // NOI18N
@@ -139,12 +143,14 @@ public class Translate extends javax.swing.JFrame {
         
         String in = textFind.getText();
      
-        if (comboOut.getSelectedIndex() == 1) { 
-            lang = "eng";
-        }
-        else{
-            lang = "vi";
-        }
+            if (comboOut.getSelectedIndex() == 0) { lang = "vi";
+            }
+            if (comboOut.getSelectedIndex() == 1) { lang = "eng";
+            }
+            if (comboOut.getSelectedIndex() == 2) { lang = "fr";
+            }
+            if (comboOut.getSelectedIndex() == 3) { lang = "de";
+            }
         
         if (!textFind.getText().isEmpty()) {
             try {
@@ -170,13 +176,16 @@ public class Translate extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER){
             String in = textFind.getText();
            
-            if (comboOut.getSelectedIndex() == 1) { 
-                lang = "eng";
+            if (comboOut.getSelectedIndex() == 0) { lang = "vi";
             }
-            else{
-                lang = "vi";
+            if (comboOut.getSelectedIndex() == 1) { lang = "eng";
             }
-        
+            if (comboOut.getSelectedIndex() == 2) { lang = "fr";
+            }
+            if (comboOut.getSelectedIndex() == 3) { lang = "de";
+            }
+
+       
             if (!textFind.getText().isEmpty()) {
                 try {
                     textRs.setText(GoogleTranslate.translate(lang,in));     
@@ -216,6 +225,10 @@ public class Translate extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void comboInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboInActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboInActionPerformed
+
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -239,6 +252,7 @@ public class Translate extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Translate.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
