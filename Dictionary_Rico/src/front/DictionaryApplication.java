@@ -11,8 +11,10 @@ import back.Word;
 import api.speakOff;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -30,8 +32,11 @@ public class DictionaryApplication extends javax.swing.JFrame {
     Database data = new Database();
     Word word= new Word() ;
     DefaultListModel<String> dListModel = new DefaultListModel<>();
-    DefaultListModel<String> dListOld = new DefaultListModel<>();
-    HashSet <String> old = new HashSet<>();
+    DefaultListModel<String> dListOldS = new DefaultListModel<>();
+    DefaultListModel<String> dListOldD = new DefaultListModel<>();
+    HashSet <String> oldS = new HashSet<>();
+    HashSet <Word> oldD = new HashSet<>();
+    
     
     /**
      * Creates new form DictionaryApplication
@@ -39,6 +44,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
     public DictionaryApplication() {
         initComponents();
         seticon();
+        showAll();
     }
     
     /**
@@ -52,9 +58,10 @@ public class DictionaryApplication extends javax.swing.JFrame {
      */
     public void showAll() {
         dListModel.clear();
-        try ( ResultSet rs = data.exeQ("SELECT word FROM Dictionary");){
-            while (rs.next()) {
-                dListModel.addElement(rs.getString("word"));
+        String sql = "SELECT word FROM Dictionary";
+        try ( Connection conn = data.connect(); Statement stmt=conn.createStatement(); ResultSet result = stmt.executeQuery(sql)){
+            while (result.next()) {
+                dListModel.addElement(result.getString("word"));
             }
         }
         catch (Exception ex) {
@@ -65,10 +72,16 @@ public class DictionaryApplication extends javax.swing.JFrame {
     /**
      * Show lịch sử
      */
-    public void showOld() {
-        dListOld.clear();
-        for (String s : old) {dListOld.addElement(s);}
-        listOld.setModel(dListOld);
+    public void showOldS() {
+        dListOldS.clear();
+        for (String s : oldS) {dListOldS.addElement(s);}
+        listOld.setModel(dListOldS);
+        
+    }
+    public void showOldD() {
+        dListOldD.clear();
+        for (Word w : oldD) {dListOldD.addElement(w.getSpelling());}
+        hisDel.setModel(dListOldD);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -96,11 +109,14 @@ public class DictionaryApplication extends javax.swing.JFrame {
         Tracuu = new javax.swing.JLabel();
         lichsuTracuu = new javax.swing.JLabel();
         bTrans = new javax.swing.JButton();
-        tuVung = new javax.swing.JPanel();
+        History = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        hisDel = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        honatac = new javax.swing.JButton();
         BG = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        Show = new javax.swing.JMenuItem();
         jMenuExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         about = new javax.swing.JMenuItem();
@@ -111,6 +127,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
         setLocation(new java.awt.Point(300, 150));
         setMinimumSize(new java.awt.Dimension(1050, 700));
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Tabble.setBackground(new java.awt.Color(153, 0, 153));
         Tabble.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -130,17 +147,15 @@ public class DictionaryApplication extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(listWord);
 
-        traTu.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 90, 330, 180));
+        traTu.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 320, 210));
 
-        bClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/iconReload.jpg"))); // NOI18N
-        bClear.setToolTipText("");
-        bClear.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/reload_icon.jpg"))); // NOI18N
         bClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bClearActionPerformed(evt);
             }
         });
-        traTu.add(bClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 50, 40, 40));
+        traTu.add(bClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, 40, 40));
 
         jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -150,48 +165,46 @@ public class DictionaryApplication extends javax.swing.JFrame {
         labelOut.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jScrollPane2.setViewportView(labelOut);
 
-        traTu.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 90, 580, 480));
+        traTu.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 90, 650, 480));
 
-        loa.setText("Phát âm");
-        loa.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        loa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/speaker.jpg"))); // NOI18N
+        loa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         loa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loaActionPerformed(evt);
             }
         });
-        traTu.add(loa, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 60, 40));
+        traTu.add(loa, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 90, 40, 40));
 
-        bDel.setText("Xóa");
-        bDel.setToolTipText("");
+        bDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/delete_icon.jpg"))); // NOI18N
         bDel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         bDel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bDelActionPerformed(evt);
             }
         });
-        traTu.add(bDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 280, 60, 40));
+        traTu.add(bDel, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, 40, 40));
 
-        bEdit.setText("Sửa từ");
-        bEdit.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/edit_icon.jpg"))); // NOI18N
+        bEdit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         bEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bEditActionPerformed(evt);
             }
         });
-        traTu.add(bEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 280, 60, 40));
+        traTu.add(bEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, 40, 40));
 
-        bAdd.setText("Thêm từ");
-        bAdd.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/add.jpg"))); // NOI18N
+        bAdd.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         bAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bAddActionPerformed(evt);
             }
         });
-        traTu.add(bAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 60, 40));
+        traTu.add(bAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 40, 40));
 
         textFind.setFont(new java.awt.Font("Times New Roman", 3, 18)); // NOI18N
         textFind.setText("Nhập từ cần tìm");
-        textFind.setToolTipText(""); // NOI18N
         textFind.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 textFindCaretUpdate(evt);
@@ -207,9 +220,10 @@ public class DictionaryApplication extends javax.swing.JFrame {
                 textFindKeyPressed(evt);
             }
         });
-        traTu.add(textFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 290, 40));
+        traTu.add(textFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 290, 40));
 
         listOld.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        listOld.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         listOld.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listOldValueChanged(evt);
@@ -217,55 +231,70 @@ public class DictionaryApplication extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(listOld);
 
-        traTu.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 400, 330, 170));
+        traTu.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 400, 330, 170));
 
         Tracuu.setBackground(new java.awt.Color(255, 255, 255));
         Tracuu.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         Tracuu.setForeground(new java.awt.Color(255, 255, 204));
         Tracuu.setText("Tra cứu");
-        traTu.add(Tracuu, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
+        traTu.add(Tracuu, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         lichsuTracuu.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         lichsuTracuu.setForeground(new java.awt.Color(255, 255, 204));
         lichsuTracuu.setText("Lịch sử tra cứu");
-        traTu.add(lichsuTracuu, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 360, 250, 30));
+        traTu.add(lichsuTracuu, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 250, 30));
 
-        bTrans.setText("Trans");
-        bTrans.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        traTu.add(bTrans, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 140, 50, 40));
+        bTrans.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/translate_icon_.jpg"))); // NOI18N
+        bTrans.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bTrans.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bTransActionPerformed(evt);
+            }
+        });
+        traTu.add(bTrans, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 150, 40, 40));
 
         Tabble.addTab("Tra Từ", traTu);
 
-        tuVung.setFocusTraversalPolicyProvider(true);
+        History.setBackground(new java.awt.Color(0, 153, 153));
+        History.setFocusTraversalPolicyProvider(true);
+        History.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout tuVungLayout = new javax.swing.GroupLayout(tuVung);
-        tuVung.setLayout(tuVungLayout);
-        tuVungLayout.setHorizontalGroup(
-            tuVungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1080, Short.MAX_VALUE)
-        );
-        tuVungLayout.setVerticalGroup(
-            tuVungLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 620, Short.MAX_VALUE)
-        );
+        hisDel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        hisDel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        hisDel.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                hisDelValueChanged(evt);
+            }
+        });
+        jScrollPane4.setViewportView(hisDel);
 
-        Tabble.addTab("Updating", tuVung);
+        History.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, 230, 390));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Các từ đã xóa");
+        History.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, 170, -1));
+
+        honatac.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        honatac.setText("Hoàn tác");
+        honatac.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        honatac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                honatacActionPerformed(evt);
+            }
+        });
+        History.add(honatac, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 100, 80, 40));
+
+        Tabble.addTab("Lịch sử", History);
+
+        getContentPane().add(Tabble, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 127, 1090, 650));
+        Tabble.getAccessibleContext().setAccessibleName("");
 
         BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Ba.jpg"))); // NOI18N
         BG.setToolTipText("");
+        getContentPane().add(BG, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 120));
 
         jMenu1.setText("File");
-
-        Show.setText("Hiện tất cả các tử");
-        Show.setActionCommand("");
-        Show.setBorderPainted(true);
-        Show.setDoubleBuffered(true);
-        Show.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ShowActionPerformed(evt);
-            }
-        });
-        jMenu1.add(Show);
 
         jMenuExit.setText("Exit");
         jMenuExit.addActionListener(new java.awt.event.ActionListener() {
@@ -292,28 +321,6 @@ public class DictionaryApplication extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(BG)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(Tabble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(BG, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Tabble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        Tabble.getAccessibleContext().setAccessibleName("");
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
@@ -332,7 +339,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
     private void bAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAddActionPerformed
         // TODO add your handling code here:
         Them add = new Them();
-        //add.setVisible(true);
+        add.setVisible(true);
     }//GEN-LAST:event_bAddActionPerformed
     /**
      * ô tìm kiếm
@@ -348,7 +355,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
             labelOut.setText("");
         }
         else{
-            try (ResultSet result = data.exeQ(sql)) {
+            try (Connection conn = data.connect(); Statement stmt=conn.createStatement(); ResultSet result = stmt.executeQuery(sql)) {
                 while (result.next()) {
                     dListModel.addElement(result.getString("word"));
                 }
@@ -366,16 +373,11 @@ public class DictionaryApplication extends javax.swing.JFrame {
      */
     private void listWordValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listWordValueChanged
         if(!listWord.isSelectionEmpty()) {    
-            word= data.getword(listWord.getSelectedValue());
+            word = data.getword(listWord.getSelectedValue());
             if(!word.getSpelling().isEmpty())
             labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");
-        }
-//        if(!listWord.isSelectionEmpty()) {
-//            word= data.getword(listWord.getSelectedValue());
-//            his.put(listWord.getSelectedValue(),1);
-//            if(!word.getSpelling().isEmpty())
-//            labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");
-//        }                                   
+            listOld.clearSelection();
+        }                                  
     }//GEN-LAST:event_listWordValueChanged
     /**
     * Xóa
@@ -387,14 +389,18 @@ public class DictionaryApplication extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Bạn chưa chọn từ để xóa","Lỗi",JOptionPane.ERROR_MESSAGE);
         } else
         if(!word.getSpelling().isEmpty()) {
-            if (old.contains(word.getSpelling())) { 
-                old.remove(word.getSpelling()); showOld(); 
+            if (oldS.contains(word.getSpelling())) { 
+                oldS.remove(word.getSpelling()); 
+                showOldS(); 
             }
+            oldD.add(word);
+            showOldD();
             data.delete(word.getSpelling());
+            
             JOptionPane.showMessageDialog(null, "Đã xóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             textFind.setText("");
             labelOut.setText("");
-            //showAll();    
+            showAll();    
         }
         else
         JOptionPane.showMessageDialog(null, "Bạn chưa chọn từ để xóa","Lỗi",JOptionPane.ERROR_MESSAGE);
@@ -425,6 +431,9 @@ public class DictionaryApplication extends javax.swing.JFrame {
     */
     private void bEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditActionPerformed
         // TODO add your handling code here:
+        if (!listWord.isSelectionEmpty()) {
+            word = data.getword(listWord.getSelectedValue());
+        } else word.reset();
         Sua s = new Sua();
         if (!word.getSpelling().isEmpty())
             s.setSua(word);
@@ -447,6 +456,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
         // TODO add your handling code here:
         textFind.setText("");
         labelOut.setText("");
+        showAll();
     }//GEN-LAST:event_bClearActionPerformed
     /**
      * Nhận phím Enter trong Ô tìm kiếm
@@ -467,8 +477,8 @@ public class DictionaryApplication extends javax.swing.JFrame {
                 labelOut.setText("");
             } 
             if(word.getSpelling()!=null) {
-                old.add(word.getSpelling());
-                showOld();
+                oldS.add(word.getSpelling());
+                showOldS();
             } 
         }
     }//GEN-LAST:event_textFindKeyPressed
@@ -477,29 +487,49 @@ public class DictionaryApplication extends javax.swing.JFrame {
      * @param evt 
      */
     private void listOldValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listOldValueChanged
-        // TODO add your handling code here:     
-   
-            word = data.getword(listOld.getSelectedValue());
-            labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");  
+        listWord.clearSelection();
+        word = data.getword(listOld.getSelectedValue());
+        labelOut.setText("<HTML>"+word.getExplain()+"</HTML>");  
     }//GEN-LAST:event_listOldValueChanged
-    /**
-     * About 
-     * @param evt 
-     */
+
     private void aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutActionPerformed
         // TODO add your handling code here:
         About ab = new About();
         ab.setVisible(true);
     }//GEN-LAST:event_aboutActionPerformed
 
-    private void ShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowActionPerformed
+    private void bTransActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTransActionPerformed
         // TODO add your handling code here:
-        showAll();
-    }//GEN-LAST:event_ShowActionPerformed
+        Translate tran = new Translate();
+        tran.setVisible(true);
+    }//GEN-LAST:event_bTransActionPerformed
+    
+    private void honatacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_honatacActionPerformed
+        // TODO add your handling code here:
+        if(!hisDel.isSelectionEmpty()) { 
+            oldD.remove(word); 
+            data.insert(word);
+            showOldD();
+            textFind.setText("");
+            labelOut.setText("");
+            showAll();
+            JOptionPane.showMessageDialog(null, "Đã hoàn tác", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_honatacActionPerformed
+
+    private void hisDelValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_hisDelValueChanged
+        // TODO add your handling code here:
+        if(!hisDel.isSelectionEmpty()) {    
+           // word = data.getword(hisDel.getSelectedValue());
+            for (Word w : oldD) {
+                if (w.getSpelling().equals(hisDel.getSelectedValue())) {
+                    word = w;
+                    break;
+                }
+            }
+        }  
+    }//GEN-LAST:event_hisDelValueChanged
         
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -535,7 +565,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BG;
-    private javax.swing.JMenuItem Show;
+    private javax.swing.JPanel History;
     private javax.swing.JTabbedPane Tabble;
     private javax.swing.JLabel Tracuu;
     private javax.swing.JMenuItem about;
@@ -544,6 +574,9 @@ public class DictionaryApplication extends javax.swing.JFrame {
     private javax.swing.JButton bDel;
     private javax.swing.JButton bEdit;
     private javax.swing.JButton bTrans;
+    private javax.swing.JList<String> hisDel;
+    private javax.swing.JButton honatac;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -551,6 +584,7 @@ public class DictionaryApplication extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel labelOut;
     private javax.swing.JLabel lichsuTracuu;
     private javax.swing.JList<String> listOld;
@@ -558,6 +592,5 @@ public class DictionaryApplication extends javax.swing.JFrame {
     private javax.swing.JButton loa;
     private javax.swing.JTextField textFind;
     private javax.swing.JPanel traTu;
-    private javax.swing.JPanel tuVung;
     // End of variables declaration//GEN-END:variables
 }

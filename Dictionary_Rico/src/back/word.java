@@ -50,4 +50,9 @@ public class Word {
     public int getId() {
         return id;
     }
+    public void reset() {
+       this.spelling = "";
+       this.explain = "";
+       this.id = 0; 
+    }
 }

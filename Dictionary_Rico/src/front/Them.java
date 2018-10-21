@@ -7,6 +7,7 @@ package front;
 
 import back.Database;
 import back.Word;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -24,8 +25,11 @@ public class Them extends javax.swing.JFrame {
     public Them() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        seticon();
     }
-
+    private void seticon() {
+     setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/add.jpg")));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,6 +49,7 @@ public class Them extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Thêm từ");
         setLocation(new java.awt.Point(500, 300));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -72,10 +77,12 @@ public class Them extends javax.swing.JFrame {
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(306, 263, 73, 41));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Từ thêm");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 12, -1, 29));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nghĩa");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 92, 61, 27));
 
@@ -109,7 +116,7 @@ public class Them extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Bạn chưa nhập hết thông tin","Lỗi",JOptionPane.ERROR_MESSAGE);
         }
         else 
-            if(w.getSpelling()!=null)  { 
+            if(!w.getSpelling().isEmpty())  { 
                 JOptionPane.showMessageDialog(null,"Từ này đã có trong từ điển","Cảnh báo",JOptionPane.WARNING_MESSAGE);
             }
             else {

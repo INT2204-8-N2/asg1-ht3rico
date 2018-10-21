@@ -8,6 +8,7 @@ package front;
 
 import back.Database;
 import back.Word;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -26,6 +27,7 @@ public class Sua extends javax.swing.JFrame {
     public Sua() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        seticon();
     }
     public void setSua(Word a){
         word.setId(a.getId());
@@ -33,6 +35,9 @@ public class Sua extends javax.swing.JFrame {
         word.setExplain(a.getExplain());  
         if(!word.getSpelling().isEmpty())
             spe.setText(word.getSpelling());
+    }
+    private void seticon() {
+     setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/edit_icon.jpg")));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -54,6 +59,7 @@ public class Sua extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sửa từ");
         setLocation(new java.awt.Point(500, 300));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -62,6 +68,7 @@ public class Sua extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nghĩa mới của từ");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 83, -1, -1));
 
@@ -69,12 +76,12 @@ public class Sua extends javax.swing.JFrame {
         exp.setRows(5);
         jScrollPane1.setViewportView(exp);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 112, 340, 108));
-        jPanel1.add(spe, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 41, 340, 30));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 112, 360, 108));
+        jPanel1.add(spe, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 41, 360, 30));
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 51, 51));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Từ cần sửa");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, -1, 27));
 
@@ -96,7 +103,7 @@ public class Sua extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(299, 238, -1, 32));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 240, -1, 32));
 
         jButton3.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jButton3.setText("Nghĩa cũ");
@@ -106,7 +113,7 @@ public class Sua extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 240, 110, 30));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 240, 110, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 290));
 

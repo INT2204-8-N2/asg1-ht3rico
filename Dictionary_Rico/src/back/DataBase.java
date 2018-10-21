@@ -12,6 +12,9 @@ import java.util.logging.Logger;
 public class Database {
     Connection conn = null;
     int id;
+    public Database() {
+        IdMax();
+    }
     public Connection connect() {
       try {     
                 Class.forName("org.sqlite.JDBC");
@@ -30,36 +33,50 @@ public class Database {
         int idmax=0;
         ResultSet rs=null;
         try (Connection conn = this.connect()){    
-             rs  = this.exeQ(sql);
-             idmax=rs.getInt("MAX(id)");
-             conn.close();
-             rs.close();
+             Statement stmt=conn.createStatement();
+            rs  = stmt.executeQuery(sql);
+            idmax=rs.getInt("MAX(id)");
+            conn.close();
+            rs.close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }   
-        this.id=idmax+1;
+        }
+        id=idmax+1;
     }
      /**
       * Thêm từ
       * @param eng
       * @param viet 
       */
-    public void insert(String eng, String viet){
-        this.IdMax();
-        String sql = "INSERT INTO Dictionary(id,word,info) VALUES("+(id++) +",'"+eng+"','"+viet+"')";
-       
-        try (Connection conn = this.connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-           
+    public void insert(String en, String vi){
+        String sql = "INSERT INTO Dictionary(id,word,info) VALUES("+(id++) +",'"+en+"','"+vi+"')";
+
+        try (Connection conn = this.connect();PreparedStatement pstmt = conn.prepareStatement(sql)) { 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()+"Tính năng");
         }
         try {
             conn.close();
         } catch (SQLException ex) {
+            System.out.println("Lỗi nè");
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public void insert(Word w) {
+        String sql = "INSERT INTO Dictionary(id,word,info) VALUES("+(id++) +",'"+w.getSpelling()+"','"+w.getExplain()+"')";
+
+        try (Connection conn = this.connect();PreparedStatement pstmt = conn.prepareStatement(sql)) { 
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage()+"Tính năng");
+        }
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            System.out.println("Lỗi nè");
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
      /**
       * Sửa từ
@@ -86,16 +103,16 @@ public class Database {
      * Xóa từ
      * @param word 
      */
-    public void delete(String word) {
+    public void delete(String w) {
         String sql = "DELETE FROM Dictionary WHERE word = ?";
  
         try (Connection conn = this.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, word);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, w);
             pstmt.executeUpdate();
  
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()+"Lỗi del");
         }
     }
     /**
@@ -104,54 +121,40 @@ public class Database {
      * @return 
      */
     public Word getword(String s) {
-        String sql = "SELECT * "+ "FROM Dictionary WHERE word = \""+s+"\"";
-        ResultSet rs=null;
-        Word w=new Word();
+        String sql = "SELECT id,word,info "+ "FROM Dictionary WHERE word = \""+s+"\"";
+        Word w = new Word();
+
+        w.setExplain("Không tìm thấy từ này");
         try (Connection conn = this.connect()){
-             rs  = this.exeQ(sql);
-             while(rs.next()){
-                 w.setId(rs.getInt("id"));
-                 w.setSpelling(rs.getString("word"));
-                 w.setExplain(rs.getString("info"));
-             }     
+            Statement stmt=conn.createStatement();
+            ResultSet rs  = stmt.executeQuery(sql);
+            while(rs.next()){
+                 w.setId(rs.getInt(1));
+                 w.setSpelling(rs.getString(2));
+                 w.setExplain(rs.getString(3));
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return w;   
+        return w;
+         
     }  
     /**
      * Trả về Word với tham số id
      * @param i
      * @return 
      */
-    public Word getData(int i){
-       String sql = "SELECT * "+ "FROM Dictionary WHERE id = '"+ i+ "'";
-        ResultSet rs=null;
-        Word w=new Word();
-        try (Connection conn = this.connect()){
-             rs  = this.exeQ(sql);
-                 w.setSpelling(rs.getString("word"));
-                 w.setExplain(rs.getString("info"));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return w;
-    }
+//    public Word getData(int i){
+//       String sql = "SELECT * "+ "FROM Dictionary WHERE id = '"+ i+ "'";
+//        ResultSet rs=null;
+//        Word w=new Word();
+//        try (Connection conn = this.connect(); Statement stmt=conn.createStatement(); ResultSet result = stmt.executeQuery(sql)) {       
+//                 w.setSpelling(result.getString("word"));
+//                 w.setExplain(result.getString("info"));
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+//        return w;
+//    }
 
-      /**
-       * Trả về kết quả truy vấn
-       * @param query
-       * @return
-       * @throws Exception 
-       */
-     public ResultSet exeQ(String s) throws Exception {
-         ResultSet result;
-        try {
-            //thực thi câu lệnh
-            result = connect().createStatement().executeQuery(s);
-        } catch (Exception e) {
-            throw new Exception("Lỗi:" + e.getMessage());
-        }
-        return result; 
-    }
 }
